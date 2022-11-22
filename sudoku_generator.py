@@ -133,7 +133,6 @@ class SudokuGenerator(object):
                 self.board[row_start + i][col_start + j] = box[i + 3 * j]
 
 
-
     def fill_diagonal(self) -> None:
         '''
         Fills the three boxes along the main diagonal of the board
@@ -152,7 +151,7 @@ class SudokuGenerator(object):
         Provided for students
         Fills the remaining cells of the board
         Should be called after the diagonal boxes have been filled
-        
+
         Parameters:
         row, col specify the coordinates of the first empty (0) cell
 
@@ -198,14 +197,14 @@ class SudokuGenerator(object):
         self.fill_diagonal()
         self.fill_remaining(0, self.box_length)
 
-    
+
     def remove_cells(self) -> None:
         '''
         Removes the appropriate number of cells from the board
         This is done by setting some values to 0
         Should be called after the entire solution has been constructed
         i.e. after fill_values has been called
-        
+
         NOTE: Be careful not to 'remove' the same cell multiple times
         i.e. if a cell is already 0, it cannot be removed again
 
