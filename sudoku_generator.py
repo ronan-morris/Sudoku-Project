@@ -1,4 +1,5 @@
 import math,random
+from dataclasses import dataclass
 
 """
 This was adapted from a GeeksforGeeks article "Program for Sudoku Generator" by Aarti_Rathi and Ankur Trisal
@@ -6,6 +7,7 @@ https://www.geeksforgeeks.org/program-sudoku-generator/
 
 """
 
+@dataclass
 class SudokuGenerator:
     '''
 	create a sudoku board - initialize class variables and set up the 2D board
@@ -22,81 +24,95 @@ class SudokuGenerator:
 	Return:
 	None
     '''
-    def __init__(self, row_length, removed_cells):
-        pass
+    row_length: int
+    removed_cells: int
+    def __post_init__(self) -> None:
+        self.board = [[None]*self.row_length for _ in range(self.row_length)]
+        self.box_length = math.sqrt(self.row_length)
 
-    '''
-	Returns a 2D python list of numbers which represents the board
 
-	Parameters: None
-	Return: list[list]
-    '''
-    def get_board(self):
-        pass
+    def get_board(self) -> list:
+        '''
+        Returns a 2D python list of numbers which represents the board
 
-    '''
-	Displays the board to the console
-    This is not strictly required, but it may be useful for debugging purposes
+        Parameters: None
+        Return: list[list]
+        '''
+        return self.board
 
-	Parameters: None
-	Return: None
-    '''
-    def print_board(self):
-        pass
 
-    '''
-	Determines if num is contained in the specified row (horizontal) of the board
-    If num is already in the specified row, return False. Otherwise, return True
+    def print_board(self) -> None:
+        '''
+        Displays the board to the console
+        This is not strictly required, but it may be useful for debugging purposes
 
-	Parameters:
-	row is the index of the row we are checking
-	num is the value we are looking for in the row
-	
-	Return: boolean
-    '''
-    def valid_in_row(self, row, num):
-        pass
+        Parameters: None
+        Return: None
+        '''
+        intermediary = [" ".join(self.board[i] for i in range(len(self.board)))]
+        print("\n".join(intermediary))
 
-    '''
-	Determines if num is contained in the specified column (vertical) of the board
-    If num is already in the specified col, return False. Otherwise, return True
 
-	Parameters:
-	col is the index of the column we are checking
-	num is the value we are looking for in the column
-	
-	Return: boolean
-    '''
-    def valid_in_col(self, col, num):
-        pass
+    def valid_in_row(self, row, num) -> bool:
+        '''
+        Determines if num is contained in the specified row (horizontal) of the board
+        If num is already in the specified row, return False. Otherwise, return True
 
-    '''
-	Determines if num is contained in the 3x3 box specified on the board
-    If num is in the specified box starting at (row_start, col_start), return False.
-    Otherwise, return True
+        Parameters:
+        row is the index of the row we are checking
+        num is the value we are looking for in the row
 
-	Parameters:
-	row_start and col_start are the starting indices of the box to check
-	i.e. the box is from (row_start, col_start) to (row_start+2, col_start+2)
-	num is the value we are looking for in the box
+        Return: boolean
+        '''
+        return bool(self.board[row].count(num))
 
-	Return: boolean
-    '''
-    def valid_in_box(self, row_start, col_start, num):
-        pass
-    
-    '''
-    Determines if it is valid to enter num at (row, col) in the board
-    This is done by checking that num is unused in the appropriate, row, column, and box
 
-	Parameters:
-	row and col are the row index and col index of the cell to check in the board
-	num is the value to test if it is safe to enter in this cell
+    def valid_in_col(self, col, num) -> bool:
+        '''
+        Determines if num is contained in the specified column (vertical) of the board
+        If num is already in the specified col, return False. Otherwise, return True
 
-	Return: boolean
-    '''
-    def is_valid(self, row, col, num):
-        pass
+        Parameters:
+        col is the index of the column we are checking
+        num is the value we are looking for in the column
+
+        Return: boolean
+        '''
+        return bool([row[col] for row in self.board].count(num))
+
+
+    def valid_in_box(self, row_start, col_start, num) -> bool:
+        '''
+        Determines if num is contained in the 3x3 box specified on the board
+        If num is in the specified box starting at (row_start, col_start), return False.
+        Otherwise, return True
+
+        Parameters:
+        row_start and col_start are the starting indices of the box to check
+        i.e. the box is from (row_start, col_start) to (row_start+2, col_start+2)
+        num is the value we are looking for in the box
+
+        Return: boolean
+        '''
+        box = self.board[row_start:row_start + self.box_length]
+        box = [row[col_start:col_start + self.box_length] for row in box]
+        box = sum(box, [])
+        return bool(box.count(num))
+
+
+    def is_valid(self, row, col, num) -> bool:
+        '''
+        Determines if it is valid to enter num at (row, col) in the board
+        This is done by checking that num is unused in the appropriate, row, column, and box
+
+        Parameters:
+        row and col are the row index and col index of the cell to check in the board
+        num is the value to test if it is safe to enter in this cell
+
+        Return: boolean
+        '''
+        row_s, col_s = row - row % self.box_length , col - col % self.box_length
+        return self.valid_in_row(row, num) and self.valid_in_col(col, num) and self.valid_in_box(row_s, col_s, num)
 
     '''
     Fills the specified 3x3 box with values
