@@ -11,34 +11,38 @@ class Cell(object):
     col: int
     width: int
     screen: pygame.Surface
-    selected: bool = False
 
 
     def __post_init__(self) -> None:
         self.sketched_value = 0
+        self.generated = bool(self.value)
         self.center = int(self.width * (self.col + 0.5)), int(self.width * (self.row + 0.5))
+
     def set_cell_value(self, value) -> None:
         """Setter for this cell’s value"""
         self.value = value
+
     def set_sketched_value(self, value) -> None:
         """Setter for this cell’s sketched value"""
         self.sketched_value = value
+
     def draw(self) -> None:
         """Draws this cell, along with the value inside it.
         If this cell has a nonzero value, that value is displayed.
         Otherwise, no value is displayed in the cell.
         The cell is outlined red if it is currently selected."""
         try:
-            given_font = pygame.font.SysFont("Menlo", self.width -20,bold=True)
-            sketch_font = pygame.font.SysFont("Noteworthy", self.width -20)
+            given_font = pygame.font.SysFont("Menlo", self.width - 20,bold=True)
+            sketch_font = pygame.font.SysFont("Noteworthy", self.width // 2 - 20)
         except OSError:
-            given_font = pygame.font.Font(None, self.width -20,bold=True)
-            sketch_font = pygame.font.Font(None, self.width -20)
+            given_font = pygame.font.Font(None, self.width - 20,bold=True)
+            sketch_font = pygame.font.Font(None, self.width // 2 - 20)
 
         given_val_surface = given_font.render(str(self.value), 0, c.GIVEN_VAL_COL)
         if self.sketched_value:
             sketch_val_surface = sketch_font.render(str(self.sketched_value), 0, c.SKETCHED_VAL_COL)
-            sketch_rect = sketch_val_surface.get_rect(center = self.center)
+            skew = lambda a : a - self.width * 0.25
+            sketch_rect = sketch_val_surface.get_rect(center = map(skew ,self.center))
             self.screen.blit(sketch_val_surface, sketch_rect)
         elif self.value:
             given_val_surface = given_font.render(str(self.given_value), 0, c.GIVEN_VAL_COL)
