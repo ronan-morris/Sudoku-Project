@@ -35,17 +35,17 @@ class Cell(object):
             given_font = pygame.font.SysFont("Menlo", self.width - 20,bold=True)
             sketch_font = pygame.font.SysFont("Noteworthy", self.width // 2 - 20)
         except OSError:
-            given_font = pygame.font.Font(None, self.width - 20,bold=True)
+            given_font = pygame.font.Font(None, self.width - 20)
             sketch_font = pygame.font.Font(None, self.width // 2 - 20)
 
-        given_val_surface = given_font.render(str(self.value), 0, c.GIVEN_VAL_COL)
+        given_val_surface = given_font.render(str(self.value), False, c.GIVEN_VAL_COL)
         if self.sketched_value:
-            sketch_val_surface = sketch_font.render(str(self.sketched_value), 0, c.SKETCHED_VAL_COL)
+            sketch_val_surface = sketch_font.render(str(self.sketched_value), False, c.SKETCHED_VAL_COL)
             skew = lambda a : a - self.width * 0.25
             sketch_rect = sketch_val_surface.get_rect(center = map(skew ,self.center))
             self.screen.blit(sketch_val_surface, sketch_rect)
         elif self.value:
-            given_val_surface = given_font.render(str(self.given_value), 0, c.GIVEN_VAL_COL)
+            given_val_surface = given_font.render(str(self.value), False, c.GIVEN_VAL_COL)
             given_rect = given_val_surface.get_rect(center = self.center)
             self.screen.blit(given_val_surface, given_rect)
 

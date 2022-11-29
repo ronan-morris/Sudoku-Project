@@ -28,7 +28,7 @@ class SudokuGenerator(object):
     removed_cells: int
     def __post_init__(self) -> None:
         self.board = [[0]*self.row_length for _ in range(self.row_length)]
-        self.box_length = math.sqrt(self.row_length)
+        self.box_length = int(math.sqrt(self.row_length))
 
 
     def get_board(self) -> list:
@@ -49,8 +49,7 @@ class SudokuGenerator(object):
         Parameters: None
         Return: None
         '''
-        intermediary = [" ".join(self.board[i] for i in range(len(self.board)))]
-        print("\n".join(intermediary))
+        print("\n".join([" ".join([str(val) for val in row]) for row in self.board]))
 
 
     def valid_in_row(self, row, num) -> bool:
@@ -64,7 +63,7 @@ class SudokuGenerator(object):
 
         Return: boolean
         '''
-        return bool(self.board[row].count(num))
+        return not bool(self.board[row].count(num))
 
 
     def valid_in_col(self, col, num) -> bool:
@@ -78,7 +77,7 @@ class SudokuGenerator(object):
 
         Return: boolean
         '''
-        return bool([row[col] for row in self.board].count(num))
+        return not bool([row[col] for row in self.board].count(num))
 
 
     def valid_in_box(self, row_start, col_start, num) -> bool:
@@ -97,7 +96,7 @@ class SudokuGenerator(object):
         box = self.board[row_start:row_start + self.box_length]
         box = [row[col_start:col_start + self.box_length] for row in box]
         box = sum(box, [])
-        return bool(box.count(num))
+        return not bool(box.count(num))
 
 
     def is_valid(self, row, col, num) -> bool:
@@ -126,7 +125,7 @@ class SudokuGenerator(object):
 
         Return: None
         '''
-        box = range(self.row_length + 1)[1:]
+        box = list(range(1, self.row_length + 1))
         random.shuffle(box)
         for i in range(self.box_length):
             for j in range(self.box_length):
@@ -158,7 +157,7 @@ class SudokuGenerator(object):
         Return:
         boolean (whether or not we could solve the board)
         '''
-        if (col >= self.row_length and row < self.row_length - 1):
+        if col >= self.row_length and row < self.row_length - 1:
             row += 1
             col = 0
         if row >= self.row_length and col >= self.row_length:
@@ -235,7 +234,8 @@ def generate_sudoku(size, removed) -> list:
     '''
     sudoku = SudokuGenerator(size, removed)
     sudoku.fill_values()
-    board = sudoku.get_board()
+    sudoku.print_board()
     sudoku.remove_cells()
+    sudoku.print_board()
     board = sudoku.get_board()
     return board
