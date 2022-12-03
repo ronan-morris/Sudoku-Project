@@ -44,17 +44,17 @@ class Board(object):
                 start_pos = (0, i * c.CELL_PX),
                 end_pos = (c.HEIGHT, i * c.CELL_PX),
                 width = 1 + int(i % c.BOX_WIDTH == 0))
-    def select(self, row, col) -> None:
+    def select(self, row_col_pos) -> None:
         """Marks the cell at (row, col) in the board as the current selected cell.
         Once a cell has been selected, the user can edit its value or sketched value."""
-        self.selected = self.table[row][col]
+        self.selected = self.table[row_col_pos[0]][row_col_pos[1]]
 
     @staticmethod
-    def click(x, y):
+    def click(x_y_pos):
         """If a tuple of (x,y) coordinates is within the displayed board, this function returns a tuple of the (row,col)
         of the cell which was clicked. Otherwise, this function returns None."""
-        if y < c.HEIGHT:
-            return x // c.CELL_PX, y // c.CELL_PX
+        if x_y_pos[1] < c.HEIGHT:
+            return x_y_pos[1] // c.CELL_PX, x_y_pos[0] // c.CELL_PX
         else:
             return None
 
