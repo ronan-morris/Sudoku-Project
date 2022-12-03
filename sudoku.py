@@ -55,7 +55,7 @@ def main():
     start_screen(screen)
 
 if __name__ == "__main__":
-
+    #skip to main game ONLY FOR TESTING
     pygame.init()
     screen = pygame.display.set_mode((c.WIDTH, c.HEIGHT))
     pygame.display.set_caption("Sudoku")
