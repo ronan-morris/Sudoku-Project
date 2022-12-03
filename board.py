@@ -30,7 +30,8 @@ class Board(object):
         """Draws an outline of the Sudoku grid, with bold lines to delineate the 3x3 boxes.
         Draws every cell on this board."""
         for row in self.table:
-            map(Cell.draw, row)
+            for cell in row:
+                cell.draw()
         for i in range(c.GRID_WIDTH + 1):
             pygame.draw.line(
                 surface = self.screen,
