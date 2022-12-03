@@ -37,18 +37,32 @@ class Board(object):
                 surface = self.screen,
                 color = c.LINE_COL,
                 start_pos = (i * c.CELL_PX,0),
-                end_pos = (i * c.CELL_PX, c.HEIGHT),
+                end_pos = (i * c.CELL_PX, c.WIDTH),
                 width = 1 + int(i % c.BOX_WIDTH == 0))
             pygame.draw.line(
                 surface = self.screen,
                 color = c.LINE_COL,
                 start_pos = (0, i * c.CELL_PX),
-                end_pos = (c.HEIGHT, i * c.CELL_PX),
+                end_pos = (c.WIDTH, i * c.CELL_PX),
                 width = 1 + int(i % c.BOX_WIDTH == 0))
     def select(self, row_col_pos) -> None:
         """Marks the cell at (row, col) in the board as the current selected cell.
         Once a cell has been selected, the user can edit its value or sketched value."""
         self.selected = self.table[row_col_pos[0]][row_col_pos[1]]
+
+    def draw_selection(self, row_col_pos) -> None:
+        """Draws rectangle arowund a cell"""
+        pygame.draw.rect(
+            surface = self.screen,
+            color = c.SELECTION_COL,
+            rect = (
+                row_col_pos[1] * c.CELL_PX,
+                row_col_pos[0] * c.CELL_PX,
+                c.CELL_PX,
+                c.CELL_PX
+            ),
+            width = 5
+        )
 
     @staticmethod
     def click(x_y_pos):

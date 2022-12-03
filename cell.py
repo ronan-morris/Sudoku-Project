@@ -42,7 +42,7 @@ class Cell(object):
         if self.sketched_value:
             sketch_val_surface = sketch_font.render(str(self.sketched_value), False, c.SKETCHED_VAL_COL)
             skew = lambda a : a - self.width * 0.25
-            sketch_rect = sketch_val_surface.get_rect(center = map(skew ,self.center))
+            sketch_rect = sketch_val_surface.get_rect(center = (skew(self.center[0]), skew(self.center[1])))
             self.screen.blit(sketch_val_surface, sketch_rect)
         elif self.value:
             given_val_surface = given_font.render(str(self.value), False, c.GIVEN_VAL_COL)

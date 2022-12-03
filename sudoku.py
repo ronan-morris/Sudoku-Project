@@ -23,7 +23,10 @@ def run_game(screen, difficulty):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Get the coordinates of the mouse click
                 pos = pygame.mouse.get_pos()
-                current_board.select(Board.click(pos))
+                row_col_pos = Board.click(pos)
+                current_board.select(row_col_pos)
+                current_board.draw_selection(row_col_pos)
+                pygame.display.flip()
 
 
                 # Prompt the user for a number
@@ -52,4 +55,9 @@ def main():
     start_screen(screen)
 
 if __name__ == "__main__":
-    main()
+
+    pygame.init()
+    screen = pygame.display.set_mode((c.WIDTH, c.HEIGHT))
+    pygame.display.set_caption("Sudoku")
+    run_game(screen, 5)
+    #main()
