@@ -20,11 +20,26 @@ class Cell(object):
 
     def set_cell_value(self, value) -> None:
         """Setter for this cell’s value"""
+        print("set cell value to ",value)
         self.value = value
 
     def set_sketched_value(self, value) -> None:
         """Setter for this cell’s sketched value"""
+        print("set cell sketch value to ",value)
         self.sketched_value = value
+
+    def draw_selection(self) -> None:
+        pygame.draw.rect(
+            surface = self.screen,
+            color = c.SELECTION_COL,
+            rect = (
+                self.col * c.CELL_PX + 3,
+                self.row * c.CELL_PX + 3,
+                c.CELL_PX - 5,
+                c.CELL_PX - 5
+            ),
+            width = 2
+        )
 
     def draw(self) -> None:
         """Draws this cell, along with the value inside it.
@@ -38,14 +53,17 @@ class Cell(object):
             given_font = pygame.font.Font(None, self.width - 20)
             sketch_font = pygame.font.Font(None, self.width // 2 - 20)
 
-        given_val_surface = given_font.render(str(self.value), False, c.GIVEN_VAL_COL)
+        pygame.draw.rect(self.screen, c.BACK_COLOR,[
+            self.col*self.width +3, self.row*self.width +3,
+            self.width -5, self.width -5])
+
         if self.sketched_value:
-            sketch_val_surface = sketch_font.render(str(self.sketched_value), False, c.SKETCHED_VAL_COL)
+            sketch_val_surface = sketch_font.render(str(self.sketched_value), False, c.SKETCHED_VAL_COL, c.BACK_COLOR)
             skew = lambda a : a - self.width * 0.25
             sketch_rect = sketch_val_surface.get_rect(center = (skew(self.center[0]), skew(self.center[1])))
             self.screen.blit(sketch_val_surface, sketch_rect)
         elif self.value:
-            given_val_surface = given_font.render(str(self.value), False, c.GIVEN_VAL_COL)
+            given_val_surface = given_font.render(str(self.value), False, c.GIVEN_VAL_COL, c.BACK_COLOR)
             given_rect = given_val_surface.get_rect(center = self.center)
             self.screen.blit(given_val_surface, given_rect)
 

@@ -25,6 +25,7 @@ class Board(object):
             for j, val in enumerate(row):
                 table_row.append(Cell(val, i, j, c.CELL_PX, self.screen))
             self.table.append(table_row)
+        self.selected = self.table[0][0]
 
     def draw(self) -> None:
         """Draws an outline of the Sudoku grid, with bold lines to delineate the 3x3 boxes.
@@ -45,30 +46,24 @@ class Board(object):
                 start_pos = (0, i * c.CELL_PX),
                 end_pos = (c.WIDTH, i * c.CELL_PX),
                 width = 1 + int(i % c.BOX_WIDTH == 0))
+        self.draw_selection()
     def select(self, row_col_pos) -> None:
         """Marks the cell at (row, col) in the board as the current selected cell.
         Once a cell has been selected, the user can edit its value or sketched value."""
+        self.selected.draw()
         self.selected = self.table[row_col_pos[0]][row_col_pos[1]]
+        self.draw_selection()
 
-    def draw_selection(self, row_col_pos) -> None:
+    def draw_selection(self) -> None:
         """Draws rectangle arowund a cell"""
-        pygame.draw.rect(
-            surface = self.screen,
-            color = c.SELECTION_COL,
-            rect = (
-                row_col_pos[1] * c.CELL_PX,
-                row_col_pos[0] * c.CELL_PX,
-                c.CELL_PX,
-                c.CELL_PX
-            ),
-            width = 5
-        )
+        if self.selected:
+            self.selected.draw_selection()
 
     @staticmethod
     def click(x_y_pos):
         """If a tuple of (x,y) coordinates is within the displayed board, this function returns a tuple of the (row,col)
         of the cell which was clicked. Otherwise, this function returns None."""
-        if x_y_pos[1] < c.HEIGHT:
+        if x_y_pos[1] < c.WIDTH:
             return x_y_pos[1] // c.CELL_PX, x_y_pos[0] // c.CELL_PX
         else:
             return None
@@ -90,9 +85,10 @@ class Board(object):
     def place_number(self) -> None:
         """Sets the value of the current selected cell equal to user entered value.
         Called when the user presses the Enter key."""
-        self.selected.set_cell_value(self.selected.sketched_value)
-        self.selected.set_sketched_value(0)
-        self.selected.draw()
+        if self.selected.sketched_value:
+            self.selected.set_cell_value(self.selected.sketched_value)
+            self.selected.set_sketched_value(0)
+            self.selected.draw()
 
     def reset_to_original(self) -> None:
         """Reset all cells in the board to their original values (0 if cleared, otherwise the corresponding digit)."""
