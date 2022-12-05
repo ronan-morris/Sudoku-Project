@@ -6,33 +6,40 @@ from sudoku_generator import generate_sudoku
 
 def start_screen(screen):
     """Create a game start screen in pygame"""
-    imp = pygame.image.load('FinalHomeScreen.jpeg').convert()
-    screen.blit(imp, (0, 0))
-    mouse = pygame.mouse.get_pos()
-    width = screen.get_width() 
-    height = screen.get_height()
-    color1 = (255,255,255)
-    color2 = (0,0,0)
-    color_light = (170,170,170)
-    color_dark = (100,100,100) 
-    if width/2 <= mouse[0] <= width/2+140 and height/2 <= mouse[1] <= height/2+40: 
-        pygame.draw.rect(screen,color_light,[width/2-300,height/2+200,140,40]) 
-        pygame.draw.rect(screen,color_light,[width/2,height/2+200,140,40])
-        pygame.draw.rect(screen,color_light,[width/2+300,height/2+200,140,40]) 
-    else: 
-        pygame.draw.rect(screen,color_dark,[width/2-300,height/2+200,140,40])
-        pygame.draw.rect(screen,color_dark,[width/2,height/2+200,140,40])
-        pygame.draw.rect(screen,color_dark,[width/2+300,height/2+200,140,40])
-    font = pygame.font.SysFont('Comic Sans', 36)
-    easy = font.render('Easy', True, color1)
-    medium = font.render('Medium', True, color1)
-    hard = font.render('Hard', True, color1)
-    screen.blit(easy, (width/2-300,height/2+200)) 
-    screen.blit(medium, (width/2,height/2+200)) 
-    screen.blit(hard, (width/2+300,height/2+200)) 
-    pygame.display.flip()
-    while True:
-        pass
+    try:
+        imp = pygame.image.load('FinalHomeScreen.jpeg').convert()
+        screen.blit(imp, (0, 0))
+    except FileNotFoundError:
+        screen.fill(c.BACK_COLOR)
+    button_font = pygame.font.SysFont('Georgia', 36)
+    done = False
+    while not done:
+        mouse = pygame.mouse.get_pos()
+        selected_button = 0
+        if c.HEIGHT//2 + 2 * c.CELL_PX <= mouse[1] <= c.HEIGHT//2 + 2 * c.CELL_PX + 40:
+            for i in range(3):
+                button_x_coord = c.WIDTH/2 + (i-1) * c.BOX_WIDTH * c.CELL_PX
+                if button_x_coord <= mouse[0] <= button_x_coord + 140:
+                    selected_button = i + 1
+        for i, difficulty_txt in enumerate(['Easy', 'Medium', 'Hard']):
+            if selected_button == i + 1:
+                button_col = c.HOVERED_BUTTON_COL
+            else:
+                button_col = c.NORMAL_BUTTON_COL
+            button_x_coord = c.WIDTH//2 + (i-1) * c.BOX_WIDTH * c.CELL_PX
+            pygame.draw.rect(screen, button_col, [button_x_coord, c.HEIGHT//2 + 2 * c.CELL_PX , 140, 40])
+            current_button = button_font.render(difficulty_txt, True, c.BUTTON_TEXT_COL)
+            screen.blit(current_button, (button_x_coord, c.HEIGHT//2 + 2 * c.CELL_PX))
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
+
+            # Check for mouse clicks
+            if event.type == pygame.MOUSEBUTTONDOWN and selected_button:
+                run_game(screen, selected_button * 10 + 20)
+
+        pygame.display.flip()
 
 def run_game(screen, difficulty):
     """Run a game of Soduku"""
@@ -78,8 +85,8 @@ def main():
     """Run to create a pygame Soduku game"""
     pygame.init()
     screen = pygame.display.set_mode((c.WIDTH, c.HEIGHT))
-    start_screen(screen)
     pygame.display.set_caption("Sudoku")
+    start_screen(screen)
 
 if __name__ == "__main__":
     main()
