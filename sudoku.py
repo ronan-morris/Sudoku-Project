@@ -6,6 +6,33 @@ from sudoku_generator import generate_sudoku
 
 def start_screen(screen):
     """Create a game start screen in pygame"""
+    imp = pygame.image.load('FinalHomeScreen.jpeg').convert()
+    screen.blit(imp, (0, 0))
+    mouse = pygame.mouse.get_pos()
+    width = screen.get_width() 
+    height = screen.get_height()
+    color1 = (255,255,255)
+    color2 = (0,0,0)
+    color_light = (170,170,170)
+    color_dark = (100,100,100) 
+    if width/2 <= mouse[0] <= width/2+140 and height/2 <= mouse[1] <= height/2+40: 
+        pygame.draw.rect(screen,color_light,[width/2-300,height/2+200,140,40]) 
+        pygame.draw.rect(screen,color_light,[width/2,height/2+200,140,40])
+        pygame.draw.rect(screen,color_light,[width/2+300,height/2+200,140,40]) 
+    else: 
+        pygame.draw.rect(screen,color_dark,[width/2-300,height/2+200,140,40])
+        pygame.draw.rect(screen,color_dark,[width/2,height/2+200,140,40])
+        pygame.draw.rect(screen,color_dark,[width/2+300,height/2+200,140,40])
+    font = pygame.font.SysFont('Comic Sans', 36)
+    easy = font.render('Easy', True, color1)
+    medium = font.render('Medium', True, color1)
+    hard = font.render('Hard', True, color1)
+    screen.blit(easy, (width/2-300,height/2+200)) 
+    screen.blit(medium, (width/2,height/2+200)) 
+    screen.blit(hard, (width/2+300,height/2+200)) 
+    pygame.display.flip()
+    while True:
+        pass
 
 def run_game(screen, difficulty):
     """Run a game of Soduku"""
@@ -51,13 +78,8 @@ def main():
     """Run to create a pygame Soduku game"""
     pygame.init()
     screen = pygame.display.set_mode((c.WIDTH, c.HEIGHT))
-    pygame.display.set_caption("Sudoku")
     start_screen(screen)
+    pygame.display.set_caption("Sudoku")
 
 if __name__ == "__main__":
-    #skip to main game ONLY FOR TESTING
-    pygame.init()
-    screen = pygame.display.set_mode((c.WIDTH, c.HEIGHT))
-    pygame.display.set_caption("Sudoku")
-    run_game(screen, 5)
-    #main()
+    main()
