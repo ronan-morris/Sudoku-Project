@@ -45,7 +45,7 @@ def start_screen(screen):
 
             # Check for mouse clicks
             if event.type == pygame.MOUSEBUTTONDOWN and selected_button:
-                run_game(screen, selected_button * 10 + 20)
+                run_game(screen, selected_button * 10 +20)
                 done = True
 
         pygame.display.flip()
@@ -88,19 +88,17 @@ def run_game(screen, difficulty):
                     done = True
 
             if event.type == pygame.KEYDOWN:
-                print(event.__dict__)
                 key = event.__dict__['key']
                 if key == 13:
-                    print("got keypress, trying to place number")
                     current_board.place_number()
                     if current_board.is_full():
                         game_over(screen, current_board.check_board())
+                        done = True
                 elif 49 <= key <= 57:
                     current_board.sketch(int(key - 48))
                 elif 1073741903 <= key <= 1073741906:
                     key -= 1073741903
                     row_col_pos[1 - key // 2] += 1 - (key % 2) * 2
-                    print(row_col_pos)
                     try:
                         current_board.select(row_col_pos)
                     except IndexError:
@@ -125,6 +123,7 @@ def run_game(screen, difficulty):
 
 def game_over(screen, winstate):
     """Create a game over screen in pygame"""
+    print(winstate)
     try:
         imp = pygame.image.load(f'Game{["Lost", "Won"][int(winstate)]}.jpeg').convert()
         imp = pygame.transform.scale(imp, (c.WIDTH, c.HEIGHT))
@@ -141,12 +140,12 @@ def game_over(screen, winstate):
 
         pygame.draw.rect(screen, [c.NORMAL_BUTTON_COL, c.HOVERED_BUTTON_COL][button_hovered],
             [button_x_coord, c.HEIGHT//2 + 2 * c.CELL_PX , 140, c.CELL_PX // 2])
-        current_button = button_font.render(["Exit", "Restart"][int(winstate)], True, c.BUTTON_TEXT_COL)
+        current_button = button_font.render(["Restart", "Exit"][int(winstate)], True, c.BUTTON_TEXT_COL)
         screen.blit(current_button, (button_x_coord, c.HEIGHT//2 + 2 * c.CELL_PX))
 
         for event in pygame.event.get():
             # Check for mouse clicks
-            if event.type == pygame.MOUSEBUTTONDOWN and button_hovered:
+            if (event.type == pygame.MOUSEBUTTONDOWN and button_hovered) or event.type == pygame.QUIT:
                 if not winstate:
                     start_screen(screen)
                 done = True

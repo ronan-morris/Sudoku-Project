@@ -20,12 +20,10 @@ class Cell(object):
 
     def set_cell_value(self, value) -> None:
         """Setter for this cell’s value"""
-        print("set cell value to ",value)
         self.value = value
 
     def set_sketched_value(self, value) -> None:
         """Setter for this cell’s sketched value"""
-        print("set cell sketch value to ",value)
         self.sketched_value = value
 
     def draw_selection(self) -> None:

@@ -234,8 +234,6 @@ def generate_sudoku(size, removed) -> list:
     '''
     sudoku = SudokuGenerator(size, removed)
     sudoku.fill_values()
-    sudoku.print_board()
     sudoku.remove_cells()
-    sudoku.print_board()
     board = sudoku.get_board()
     return board

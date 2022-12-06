@@ -114,15 +114,18 @@ class Board(object):
 
     def check_board(self) ->bool:
         """Check whether the Sudoku board is solved correctly."""
-        ls_1_9 = range(c.GRID_WIDTH)[1:]
+        ls_1_9 = [i+1 for i in range(c.GRID_WIDTH)]
         for row in self.table:
             if sorted([cell.value for cell in row]) != ls_1_9:
                 return False
         for i in range(len(self.table)):
             if sorted([ row[i].value for row in self.table ]) != ls_1_9:
                 return False
-            box = [row[i/ c.GRID_WIDTH : i//c.GRID_WIDTH +3] for row in self.table[i%c.GRID_WIDTH : i%c.GRID_WIDTH +3]]
+            box = [r[i//c.BOX_WIDTH*3 : i//c.BOX_WIDTH*3+3] for r in self.table[i%c.BOX_WIDTH*3 : i%c.BOX_WIDTH*3+3]]
             if sorted([ cell.value for cell in sum(box, []) ]) != ls_1_9:
+                print("Failed on box check")
+                print(sorted([ cell.value for cell in sum(box, []) ]))
+                print(ls_1_9)
                 return False
         return True
 
